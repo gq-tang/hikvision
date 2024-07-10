@@ -118,11 +118,9 @@ func (c *Client) sign(method string, url string, req *http.Request, signHeader m
 	lowerKeys := make([]string, 0, len(keys))
 	for _, key := range keys {
 		v := signHeader[key]
-		if v != "" {
-			lowerKeys = append(lowerKeys, strings.ToLower(key))
-			sb.WriteString(fmt.Sprintf("%s:%s", strings.ToLower(key), v))
-			sb.WriteByte('\n')
-		}
+		lowerKeys = append(lowerKeys, strings.ToLower(key))
+		sb.WriteString(fmt.Sprintf("%s:%s", strings.ToLower(key), v))
+		sb.WriteByte('\n')
 	}
 	sb.WriteString(url)
 	signString := sb.String()
@@ -132,8 +130,8 @@ func (c *Client) sign(method string, url string, req *http.Request, signHeader m
 	req.Header.Set(SysHeaderCaSignHeaders, signHeaders)
 	if c.isDebug {
 		c.log.DebugF("signString:\n%s", signString)
-		c.log.DebugF("sign:%s", sign)
 		c.log.DebugF("signHeaders:%s", signHeaders)
+		c.log.DebugF("sign:%s", sign)
 	}
 }
 

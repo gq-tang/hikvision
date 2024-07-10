@@ -34,3 +34,8 @@ const (
 const (
 	PathEventSubscriptionByEventTypes = "/api/eventService/v1/eventSubscriptionByEventTypes"
 )
+
+const (
+	EventRegionEntrance = 131586 // 进入区域
+	EventRegionExiting  = 131587 // 离开区域
+)
