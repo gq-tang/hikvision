@@ -131,7 +131,7 @@ func (c *Client) sign(method string, url string, req *http.Request, signHeader m
 	signHeaders := strings.Join(lowerKeys, ",")
 	req.Header.Set(SysHeaderCaSignHeaders, signHeaders)
 	if c.isDebug {
-		c.log.DebugF("signString:%s", signString)
+		c.log.DebugF("signString:\n%s", signString)
 		c.log.DebugF("sign:%s", sign)
 		c.log.DebugF("signHeaders:%s", signHeaders)
 	}

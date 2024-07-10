@@ -12,7 +12,10 @@ package hikvision
 import (
 	"context"
 	"encoding/json"
+	"fmt"
+	"github.com/pkg/errors"
 	"net/http"
+	"strings"
 )
 
 /*
@@ -36,7 +39,12 @@ func (c *Client) EventSubscriptionByEventTypes(ctx context.Context, req *EventSu
 	}
 
 	defer response.Body.Close()
-
+	if response.StatusCode != http.StatusOK {
+		return nil, errors.New(response.Status)
+	}
+	if strings.ToLower(response.Header.Get("Content-Type")) != "application/json" {
+		return nil, fmt.Errorf("invalid json format")
+	}
 	decoder := json.NewDecoder(response.Body)
 	var resp EventSubscriptionResp
 	if err := decoder.Decode(&resp); err != nil {
