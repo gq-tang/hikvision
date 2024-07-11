@@ -1,6 +1,6 @@
 package hikvision
 
-var IgnoreHeaderKey = map[string]struct{}{
+var ignoreHeaderKey = map[string]struct{}{
 	"X-Ca-Signature":         {},
 	"X-Ca-Signature-Headers": {},
 	"Accept":                 {},

@@ -11,11 +11,11 @@ package hikvision
 
 import (
 	"context"
-	"net/http"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
-func Test_Client(t *testing.T) {
+func Test_Sign(t *testing.T) {
 	cli, err := NewClient(&ClientOption{
 		AppKey:    "29666671",
 		AppSecret: "empsl21ds3",
@@ -39,13 +39,16 @@ func Test_Client(t *testing.T) {
 		"X-Requested-With": "XMLHttpRequest",
 	}
 	signHeader := map[string]string{
+		SysHeaderCaKey:       cli.appKey,
 		SysHeaderCaTimestamp: "1479968678000",
 		"header-A":           "A",
 		"header-B":           "b",
 	}
-	_, err = cli.doRequest(context.Background(), http.MethodPost, "/artemis/api/example?a-body=a&qa=a&qb=B&x-body=x", header, signHeader, nil)
+	request, err := cli.newRequest(context.Background(), "", "/artemis/api/example?a-body=a&qa=a&qb=B&x-body=x", header, signHeader, nil)
 	if err != nil {
 		t.Error(err)
-		return
 	}
+	sign := request.Header.Get(SysHeaderCaSign)
+	exceptSign := "JRpUpk1ETjzr5gsbo4qoEA9EiQPejvNz12B837xV5HI="
+	assert.Equal(t, sign, exceptSign)
 }

@@ -85,7 +85,7 @@ func NewClient(opt *ClientOption) (*Client, error) {
 // Date + "\n" +
 // Headers +
 // Url
-func (c *Client) sign(method string, url string, req *http.Request, signHeader map[string]string, data []byte) {
+func (c *Client) sign(method string, path string, req *http.Request, signHeader map[string]string, data []byte) {
 	sb := strings.Builder{}
 	sb.WriteString(method)
 	sb.WriteByte('\n')
@@ -106,7 +106,7 @@ func (c *Client) sign(method string, url string, req *http.Request, signHeader m
 
 	keys := make([]string, 0, len(signHeader))
 	for k, _ := range signHeader {
-		_, ignored := IgnoreHeaderKey[k]
+		_, ignored := ignoreHeaderKey[k]
 		if !ignored {
 			keys = append(keys, k)
 		}
@@ -122,7 +122,7 @@ func (c *Client) sign(method string, url string, req *http.Request, signHeader m
 		sb.WriteString(fmt.Sprintf("%s:%s", strings.ToLower(key), v))
 		sb.WriteByte('\n')
 	}
-	sb.WriteString(url)
+	sb.WriteString(path)
 	signString := sb.String()
 	sign := getSign(signString, c.appSecret)
 	req.Header.Set(SysHeaderCaSign, sign)
