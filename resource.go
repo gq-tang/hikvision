@@ -15,6 +15,7 @@ import (
 	"time"
 )
 
+// DeviceResourceReq 获取资源列表v2请求参数
 type DeviceResourceReq struct {
 	PageNo       int    `json:"pageNo"`       // 当前页码
 	PageSize     int    `json:"pageSize"`     // 分页大小

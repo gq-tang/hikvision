@@ -14,8 +14,7 @@ import (
 	"net/http"
 )
 
-/*
- */
+// EventSubscriptionReq 按事件类型订阅事件请求参数
 type EventSubscriptionReq struct {
 	EventTypes []int  `json:"eventTypes"`        // 事件类型
 	EventDest  string `json:"eventDest"`         // 指定事件接收的地址，采用restful回调模式，支持http和https
@@ -23,14 +22,14 @@ type EventSubscriptionReq struct {
 	EventLvl   []int  `json:"eventLvl"`          // 事件等级，0-未配置，1-低，2-中，3-高 此处事件等级是指在事件联动中配置的等级 订阅类型为0时，此参数无效，使用默认值0 在订阅类型为1时，不填使用默认值[1,2,3] 在订阅类型为2时，不填使用默认值[0,1,2,3] 数组大小不超过32，事件等级大小不超过31
 }
 
-type EventSubscriptionResp struct {
+type CommonResp struct {
 	Code string `json:"code"` // 返回码 0表示订阅成功，其他表示失败
 	Msg  string `json:"msg"`  // 返回描述-记录接口执行情况说明信息 success表示成功描述，其他表示失败
 }
 
 // EventSubscriptionByEventTypes 按事件类型订阅事件
-func (c *Client) EventSubscriptionByEventTypes(ctx context.Context, req *EventSubscriptionReq) (*EventSubscriptionResp, error) {
-	var resp EventSubscriptionResp
+func (c *Client) EventSubscriptionByEventTypes(ctx context.Context, req *EventSubscriptionReq) (*CommonResp, error) {
+	var resp CommonResp
 	if err := c.do(ctx, http.MethodPost, PathEventSubscriptionByEventTypes, nil, nil, req, &resp); err != nil {
 		return nil, err
 	}
