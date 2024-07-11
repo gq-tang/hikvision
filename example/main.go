@@ -27,11 +27,30 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	eventSubscript(cli)
+	deviceResource(cli)
+}
+
+func eventSubscript(cli *hikvision.Client) {
 	resp, err := cli.EventSubscriptionByEventTypes(context.Background(), &hikvision.EventSubscriptionReq{
-		EventTypes: []int{131612},
+		EventTypes: []int{hikvision.EventRegionEntrance, hikvision.EventRegionExiting},
 		EventDest:  "http://www.example.com",
 		SubType:    0,
 		EventLvl:   nil,
+	})
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	data, _ := json.MarshalIndent(resp, "", " ")
+	fmt.Println(string(data))
+}
+
+func deviceResource(cli *hikvision.Client) {
+	resp, err := cli.DeviceResources(context.Background(), &hikvision.DeviceResourceReq{
+		PageNo:       1,
+		PageSize:     100,
+		ResourceType: hikvision.ResourceCamera,
 	})
 	if err != nil {
 		fmt.Println(err)
