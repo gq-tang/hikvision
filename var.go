@@ -34,6 +34,7 @@ const (
 const (
 	PathEventSubscriptionByEventTypes = "/api/eventService/v1/eventSubscriptionByEventTypes"
 	PathResourcesByParams             = "/api/irds/v2/resource/resourcesByParams"
+	PathDeviceResource                = "/api/irds/v2/deviceResource/resources"
 )
 
 const (

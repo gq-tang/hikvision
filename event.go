@@ -11,11 +11,7 @@ package hikvision
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
-	"github.com/pkg/errors"
 	"net/http"
-	"strings"
 )
 
 /*
@@ -34,21 +30,8 @@ type EventSubscriptionResp struct {
 
 // EventSubscriptionByEventTypes 按事件类型订阅事件
 func (c *Client) EventSubscriptionByEventTypes(ctx context.Context, req *EventSubscriptionReq) (*EventSubscriptionResp, error) {
-	response, err := c.doRequest(ctx, http.MethodPost, PathEventSubscriptionByEventTypes, nil, nil, req)
-	if err != nil {
-		return nil, err
-	}
-
-	defer response.Body.Close()
-	if response.StatusCode != http.StatusOK {
-		return nil, errors.New(response.Status)
-	}
-	if strings.ToLower(response.Header.Get("Content-Type")) != "application/json" {
-		return nil, fmt.Errorf("invalid json format")
-	}
-	decoder := json.NewDecoder(response.Body)
 	var resp EventSubscriptionResp
-	if err := decoder.Decode(&resp); err != nil {
+	if err := c.do(ctx, http.MethodPost, PathEventSubscriptionByEventTypes, nil, nil, req, &resp); err != nil {
 		return nil, err
 	}
 	return &resp, nil

@@ -105,7 +105,7 @@ func (c *Client) sign(method string, path string, req *http.Request, signHeader 
 	sb.WriteByte('\n')
 
 	keys := make([]string, 0, len(signHeader))
-	for k, _ := range signHeader {
+	for k := range signHeader {
 		_, ignored := ignoreHeaderKey[k]
 		if !ignored {
 			keys = append(keys, k)
@@ -196,4 +196,25 @@ func (c *Client) doRequest(ctx context.Context, method string, path string, head
 	}
 
 	return c.cli.Do(request)
+}
+
+func (c *Client) do(ctx context.Context, method string, path string, header map[string]string, signHeader map[string]string, req interface{}, resp interface{}) error {
+	response, err := c.doRequest(ctx, method, path, header, signHeader, req)
+	if err != nil {
+		return err
+	}
+
+	defer response.Body.Close()
+	if response.StatusCode != http.StatusOK {
+		return errors.New(response.Status)
+	}
+	if strings.ToLower(response.Header.Get("Content-Type")) != "application/json" {
+		return fmt.Errorf("invalid json format")
+	}
+	decoder := json.NewDecoder(response.Body)
+
+	if err := decoder.Decode(&resp); err != nil {
+		return err
+	}
+	return nil
 }
