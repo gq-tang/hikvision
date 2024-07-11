@@ -49,6 +49,6 @@ func Test_Sign(t *testing.T) {
 		t.Error(err)
 	}
 	sign := request.Header.Get(SysHeaderCaSign)
-	exceptSign := "JRpUpk1ETjzr5gsbo4qoEA9EiQPejvNz12B837xV5HI="
-	assert.Equal(t, sign, exceptSign)
+	expectSign := "JRpUpk1ETjzr5gsbo4qoEA9EiQPejvNz12B837xV5HI="
+	assert.Equal(t, sign, expectSign)
 }
