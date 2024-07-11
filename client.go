@@ -16,12 +16,12 @@ import (
 )
 
 type Logger interface {
-	DebugF(format string, args ...interface{})
+	Debugf(format string, args ...interface{})
 }
 
 type defaultLog struct{}
 
-func (defaultLog) DebugF(format string, v ...any) {
+func (defaultLog) Debugf(format string, v ...any) {
 	log.Printf(format, v...)
 }
 
@@ -129,9 +129,9 @@ func (c *Client) sign(method string, path string, req *http.Request, signHeader 
 	signHeaders := strings.Join(lowerKeys, ",")
 	req.Header.Set(SysHeaderCaSignHeaders, signHeaders)
 	if c.isDebug {
-		c.log.DebugF("signString:\n%s", signString)
-		c.log.DebugF("signHeaders:%s", signHeaders)
-		c.log.DebugF("sign:%s", sign)
+		c.log.Debugf("signString:\n%s", signString)
+		c.log.Debugf("signHeaders:%s", signHeaders)
+		c.log.Debugf("sign:%s", sign)
 	}
 }
 
