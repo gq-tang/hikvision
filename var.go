@@ -46,4 +46,5 @@ const (
 
 const (
 	ResourceCamera = "camera" // 监控点
+	ResourceDoor   = "door"   // 门禁
 )
