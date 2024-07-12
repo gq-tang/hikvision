@@ -43,6 +43,19 @@ type (
 		ComId            string `json:"comId"`            // 组件标志
 		CreateTime       string `json:"createTime"`       // 创建时间
 		UpdateTime       string `json:"updateTime"`       // 更新时间
+		// CameraDTO
+		ExternalIndexCode string `json:"externalIndexCode"` // 	监控点国标编号
+		Longitude         string `json:"longitude"`         // 经度
+		Latitude          string `json:"latitude"`          // 纬度
+		Elevation         string `json:"elevation"`         // 海拔高度
+		CameraType        int    `json:"cameraType"`        // 监控点类型
+		ChanNum           int    `json:"chanNum"`           // 通道号
+		CascadeCode       string `json:"cascadeCode"`       // 	级联编号
+		CacIndexCode      string `json:"dacIndexCode"`      // 所属DAC编号
+		Capability        string `json:"capability"`        // 设备能力集(含设备上的智能能力)
+		RecordLocation    string `json:"recordLocation"`    // 录像存储位置
+		TransType         int    `json:"transType"`         // 传输协议
+		TreatyType        string `json:"treatyType"`        // 接入协议
 	}
 	DeviceResourceData struct {
 		Total    int                  `json:"total"`    // 记录总数

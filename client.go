@@ -175,8 +175,8 @@ func (c *Client) doRequest(ctx context.Context, method string, path string, head
 		}
 	}
 	defaultHeader := map[string]string{
-		"Content-Type": "application/json;charset=UTF-8",
-		"Accept":       "application/json",
+		HeaderContentType: "application/json;charset=UTF-8",
+		HeaderAccept:      "application/json",
 	}
 	for k, v := range header {
 		defaultHeader[k] = v
@@ -208,7 +208,8 @@ func (c *Client) do(ctx context.Context, method string, path string, header map[
 	if response.StatusCode != http.StatusOK {
 		return errors.New(response.Status)
 	}
-	if strings.ToLower(response.Header.Get("Content-Type")) != "application/json" {
+	contentType := strings.ToLower(response.Header.Get(HeaderContentType))
+	if !strings.Contains(contentType, "application/json") {
 		return fmt.Errorf("invalid json format")
 	}
 	decoder := json.NewDecoder(response.Body)

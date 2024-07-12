@@ -29,6 +29,8 @@ const (
 	SysHeaderCaSignHeaders = "X-Ca-Signature-Headers"
 	SysHeaderCaTimestamp   = "X-Ca-Timestamp"
 	SysHeaderCaNonce       = "X-Ca-Nonce"
+	HeaderContentType      = "Content-Type"
+	HeaderAccept           = "Accept"
 )
 
 const (

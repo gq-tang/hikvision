@@ -20,9 +20,9 @@ func main() {
 	cli, err := hikvision.NewClient(&hikvision.ClientOption{
 		AppKey:    "29666671",
 		AppSecret: "empsl21ds3",
-		Host:      "http://www.example.com",
+		Host:      "http://127.0.0.1:8080",
 		Log:       nil,
-		IsDebug:   true,
+		IsDebug:   false,
 	})
 	if err != nil {
 		panic(err)
@@ -31,7 +31,15 @@ func main() {
 	deviceResource(cli)
 }
 
+func separate(fnName string) func() {
+	fmt.Printf("--------------%s begin------------\n", fnName)
+	return func() {
+		fmt.Printf("--------------%s end--------------\n", fnName)
+	}
+}
+
 func eventSubscript(cli *hikvision.Client) {
+	defer separate("eventSubscript")()
 	resp, err := cli.EventSubscriptionByEventTypes(context.Background(), &hikvision.EventSubscriptionReq{
 		EventTypes: []int{hikvision.EventRegionEntrance, hikvision.EventRegionExiting},
 		EventDest:  "http://www.example.com",
@@ -47,6 +55,7 @@ func eventSubscript(cli *hikvision.Client) {
 }
 
 func deviceResource(cli *hikvision.Client) {
+	defer separate("deviceResource")()
 	resp, err := cli.DeviceResources(context.Background(), &hikvision.DeviceResourceReq{
 		PageNo:       1,
 		PageSize:     100,
