@@ -13,6 +13,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/gq-tang/hikvision"
 	"io"
 	"log"
 	"net/http"
@@ -28,8 +29,11 @@ func main() {
 	flag.IntVar(&port, "port", 8080, "web port")
 
 	flag.Parse()
-	http.HandleFunc("/api/eventService/v1/eventSubscriptionByEventTypes", event)
-	http.HandleFunc("/api/irds/v2/deviceResource/resources", deviceResource)
+	http.HandleFunc(hikvision.PathEventSubscriptionByEventTypes, event)
+	http.HandleFunc(hikvision.PathDeviceResource, deviceResource)
+	http.HandleFunc(hikvision.PathHistoryStatus, historyStatus)
+	http.HandleFunc(hikvision.PathCameraStatus, cameraStatus)
+
 	address := fmt.Sprintf("0.0.0.0:%d", port)
 	log.Printf("web start at %s\n", address)
 	server := &http.Server{Addr: address, Handler: nil}
@@ -58,8 +62,7 @@ func separate(fnName string) func() {
 	}
 }
 
-func event(w http.ResponseWriter, r *http.Request) {
-	defer separate(r.RequestURI)()
+func handle(w http.ResponseWriter, r *http.Request) error {
 	w.Header().Set("content-type", "application/json")
 	fmt.Println("header:")
 	for k := range r.Header {
@@ -67,26 +70,27 @@ func event(w http.ResponseWriter, r *http.Request) {
 	}
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
+		return err
+	}
+	fmt.Printf("body:\n%s\n", body)
+	return nil
+}
+
+func event(w http.ResponseWriter, r *http.Request) {
+	defer separate(r.RequestURI)()
+	if err := handle(w, r); err != nil {
 		responseErr(w, -1, err)
 		return
 	}
-	fmt.Printf("body:\n%s\n", body)
 	responseSuccess(w)
 }
 
 func deviceResource(w http.ResponseWriter, r *http.Request) {
 	defer separate(r.RequestURI)()
-	w.Header().Set("content-type", "application/json")
-	fmt.Println("header:")
-	for k := range r.Header {
-		fmt.Printf("%s:%s\n", k, r.Header.Get(k))
-	}
-	body, err := io.ReadAll(r.Body)
-	if err != nil {
+	if err := handle(w, r); err != nil {
 		responseErr(w, -1, err)
 		return
 	}
-	fmt.Printf("body:\n%s\n", body)
 	data := `{
     "code": "0",
     "msg": "SUCCESS",
@@ -119,6 +123,64 @@ func deviceResource(w http.ResponseWriter, r *http.Request) {
         ]
     }
 }`
+	w.Write([]byte(data))
+}
+
+func historyStatus(w http.ResponseWriter, r *http.Request) {
+	defer separate(r.RequestURI)()
+	if err := handle(w, r); err != nil {
+		responseErr(w, -1, err)
+		return
+	}
+	data := `{
+    "code": "0",
+    "msg": "Operation succeeded",
+    "data": {
+        "total": 1,
+        "list": [
+            {
+                "collectTime": "2018-12-28T10:21:40.000+08:00",
+                "online": 1
+            }
+        ]
+    }
+}`
+	w.Write([]byte(data))
+}
+
+func cameraStatus(w http.ResponseWriter, r *http.Request) {
+	defer separate(r.RequestURI)()
+	if err := handle(w, r); err != nil {
+		responseErr(w, -1, err)
+		return
+	}
+	data := `{
+    "code": "0",
+    "msg": "Operation succeeded",
+    "data": {
+        "pageNo": 1,
+        "pageSize": 20,
+        "totalPage": 0,
+        "total": 1,
+        "list": [
+            {
+                "deviceType": null,
+                "regionIndexCode": "root000000",
+                "collectTime": "2019-12-04T14:00:02.000+08:00",
+                "deviceIndexCode": null,
+                "port": null,
+                "ip": null,
+                "regionName": "根节点",
+                "indexCode": "9b04256009bf4260bc6be5f333cbb5e9",
+                "online": 1,
+                "cn": "IPdome--球机123",
+                "treatyType": "1",
+                "manufacturer": null
+            }
+        ]
+    }
+}
+`
 	w.Write([]byte(data))
 }
 
