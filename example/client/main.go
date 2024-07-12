@@ -56,10 +56,9 @@ func eventSubscript(cli *hikvision.Client) {
 
 func deviceResource(cli *hikvision.Client) {
 	defer separate("deviceResource")()
-	resp, err := cli.DeviceResources(context.Background(), &hikvision.DeviceResourceReq{
-		PageNo:       1,
-		PageSize:     100,
-		ResourceType: hikvision.ResourceCamera,
+	resp, err := cli.CameraResources(context.Background(), &hikvision.NoTypeResourceReq{
+		PageNo:   1,
+		PageSize: 100,
 	})
 	if err != nil {
 		fmt.Println(err)

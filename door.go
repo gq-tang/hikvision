@@ -43,19 +43,19 @@ type (
 		List     []DoorResourceItem `json:"list"`     // 返回数据
 	}
 	DoorResourceResp struct {
-		Code string             `json:"code"` // 返回码 0: 成功
-		Msg  string             `json:"msg"`  // 返回描述
-		Data DeviceResourceData `json:"data"` // 资源数据列表
+		Code string           `json:"code"` // 返回码 0: 成功
+		Msg  string           `json:"msg"`  // 返回描述
+		Data DoorResourceData `json:"data"` // 资源数据列表
 	}
 )
 
 // DoorResources 获取门禁资源列表v2
-func (c *Client) DoorResources(ctx context.Context, _req *NoTypeResourceReq) (*CameraResourceResp, error) {
-	var resp CameraResourceResp
+func (c *Client) DoorResources(ctx context.Context, _req *NoTypeResourceReq) (*DoorResourceResp, error) {
+	var resp DoorResourceResp
 	req := DeviceResourceReq{
 		PageNo:       _req.PageNo,
 		PageSize:     _req.PageSize,
-		ResourceType: ResourceCamera,
+		ResourceType: ResourceDoor,
 	}
 	if err := c.do(ctx, http.MethodPost, PathDeviceResource, nil, nil, req, &resp); err != nil {
 		return nil, err
