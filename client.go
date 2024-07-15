@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/pkg/errors"
+	"io"
 	"log"
 	"net/http"
 	"sort"
@@ -89,7 +90,7 @@ func (c *Client) sign(method string, path string, req *http.Request, signHeader 
 	sb := strings.Builder{}
 	sb.WriteString(method)
 	sb.WriteByte('\n')
-	accept := req.Header.Get("Accept")
+	accept := req.Header.Get(HeaderAccept)
 	sb.WriteString(accept)
 	sb.WriteByte('\n')
 	if len(data) > 0 {
@@ -100,7 +101,7 @@ func (c *Client) sign(method string, path string, req *http.Request, signHeader 
 		sb.WriteString(contentMd5)
 		sb.WriteByte('\n')
 	}
-	contentType := req.Header.Get("Content-Type")
+	contentType := req.Header.Get(HeaderContentType)
 	sb.WriteString(contentType)
 	sb.WriteByte('\n')
 
@@ -143,7 +144,13 @@ func (c *Client) newRequest(ctx context.Context, method string, path string, hea
 		method = "POST"
 	}
 
-	body := bytes.NewBuffer(data)
+	var (
+		body io.Reader
+	)
+	if len(data) > 0 {
+		body = bytes.NewBuffer(data)
+	}
+
 	url := fmt.Sprintf("%s%s", c.host, path)
 	req, err := http.NewRequest(method, url, body)
 	if err != nil {
@@ -210,7 +217,7 @@ func (c *Client) do(ctx context.Context, method string, path string, header map[
 	}
 	contentType := strings.ToLower(response.Header.Get(HeaderContentType))
 	if !strings.Contains(contentType, "application/json") {
-		return fmt.Errorf("invalid json format")
+		return fmt.Errorf("The body is not json")
 	}
 	decoder := json.NewDecoder(response.Body)
 
