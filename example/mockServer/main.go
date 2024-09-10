@@ -24,9 +24,11 @@ import (
 
 func main() {
 	var (
-		port int
+		port  int
+		isTLS bool
 	)
 	flag.IntVar(&port, "port", 8080, "web port")
+	flag.BoolVar(&isTLS, "tls", false, "TLS enabled")
 
 	flag.Parse()
 	http.HandleFunc(hikvision.PathEventSubscriptionByEventTypes, event)
@@ -46,13 +48,26 @@ func main() {
 		}
 	}()
 
-	if err := server.ListenAndServe(); err != nil {
-		if err == http.ErrServerClosed {
-			fmt.Println("server closed")
-			return
+	if isTLS {
+		log.Println("start with https")
+		if err := server.ListenAndServeTLS("./tls/mycert.crt", "./tls/mykey.pem"); err != nil {
+			if err == http.ErrServerClosed {
+				fmt.Println("server closed")
+				return
+			}
+			fmt.Println("ListenAndServe error: ", err.Error())
 		}
-		fmt.Println("ListenAndServe error: ", err.Error())
+	} else {
+		log.Println("start with http")
+		if err := server.ListenAndServe(); err != nil {
+			if err == http.ErrServerClosed {
+				fmt.Println("server closed")
+				return
+			}
+			fmt.Println("ListenAndServe error: ", err.Error())
+		}
 	}
+
 }
 
 func separate(fnName string) func() {

@@ -12,15 +12,20 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"github.com/gq-tang/hikvision"
 )
 
 func main() {
+	var host string
+	flag.StringVar(&host, "host", "http://127.0.0.1:8080", "host url,example(http://127.0.0.1:8080)")
+	flag.Parse()
+
 	cli, err := hikvision.NewClient(&hikvision.ClientOption{
 		AppKey:    "29666671",
 		AppSecret: "empsl21ds3",
-		Host:      "http://127.0.0.1:8080",
+		Host:      host,
 		Log:       nil,
 		IsDebug:   false,
 	})
