@@ -7,4 +7,5 @@
 * 查询资源列表v2 
 * 获取资源的历史在线记录
 * 获取监控点在线状态
-* example
+* examples
+* 支持HTTP/HTTPS
