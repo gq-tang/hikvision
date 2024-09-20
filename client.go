@@ -114,14 +114,7 @@ func (c *Client) sign(method string, path string, req *http.Request, signHeader 
 	accept := req.Header.Get(HeaderAccept)
 	sb.WriteString(accept)
 	sb.WriteByte('\n')
-	if len(data) > 0 {
-		md := md5.New()
-		md.Write(data)
-		sum := md.Sum(nil)
-		contentMd5 := base64.StdEncoding.EncodeToString(sum)
-		sb.WriteString(contentMd5)
-		sb.WriteByte('\n')
-	}
+
 	contentType := req.Header.Get(HeaderContentType)
 	sb.WriteString(contentType)
 	sb.WriteByte('\n')
@@ -179,7 +172,13 @@ func (c *Client) newRequest(ctx context.Context, method string, path string, hea
 	}
 
 	req = req.WithContext(ctx)
-
+	if len(data) > 0 {
+		md := md5.New()
+		md.Write(data)
+		sum := md.Sum(nil)
+		contentMd5 := base64.StdEncoding.EncodeToString(sum)
+		req.Header.Set(HeaderContentMD5, contentMd5)
+	}
 	for k, v := range header {
 		req.Header.Set(k, v)
 	}

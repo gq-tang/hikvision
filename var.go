@@ -31,6 +31,7 @@ const (
 	SysHeaderCaNonce       = "X-Ca-Nonce"
 	HeaderContentType      = "Content-Type"
 	HeaderAccept           = "Accept"
+	HeaderContentMD5       = "Content-MD5"
 )
 
 const (
