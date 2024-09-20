@@ -8,6 +8,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"io"
 	"log"
@@ -203,7 +204,7 @@ func (c *Client) doRequest(ctx context.Context, method string, path string, head
 	}
 	defaultHeader := map[string]string{
 		HeaderContentType: "application/json;charset=UTF-8",
-		HeaderAccept:      "application/json",
+		HeaderAccept:      "*/*",
 	}
 	for k, v := range header {
 		defaultHeader[k] = v
@@ -211,6 +212,7 @@ func (c *Client) doRequest(ctx context.Context, method string, path string, head
 
 	defaultSignHeader := map[string]string{
 		SysHeaderCaKey:       c.appKey,
+		SysHeaderCaNonce:     uuid.New().String(),
 		SysHeaderCaTimestamp: fmt.Sprintf("%d", time.Now().UnixMicro()),
 	}
 	for k, v := range signHeader {

@@ -19,7 +19,7 @@ func Test_Sign(t *testing.T) {
 	cli, err := NewClient(&ClientOption{
 		AppKey:    "20072953",
 		AppSecret: "CcPBOy805Utmhffdsl1V",
-		Host:      "https://10.41.101.216:443",
+		Host:      "https://192.168.7.251:443",
 		Log:       nil,
 		IsDebug:   true,
 	})
@@ -29,7 +29,7 @@ func Test_Sign(t *testing.T) {
 	}
 
 	header := map[string]string{
-		"Accept": "application/json",
+		"Accept": "*/*",
 		//"Accept-Encoding":  "gzip, deflate, sdch",
 		//"Accept-Language":  "zh-CN,zh;q=0.8",
 		//"Connection":       "keep-alive",
@@ -40,8 +40,8 @@ func Test_Sign(t *testing.T) {
 	}
 	signHeader := map[string]string{
 		SysHeaderCaKey:       cli.appKey,
-		SysHeaderCaTimestamp: "1726819980081",
-		"x-ca-nonce":         "41b2f3e7-82fd-e498-f312-cb964fa52cc3",
+		SysHeaderCaTimestamp: "1726821293519",
+		"x-ca-nonce":         "73f44cd3-a584-7f11-1f43-a0d7c2d2317c",
 		//"header-A":           "A",
 		//"header-B":           "b",
 	}
@@ -54,6 +54,6 @@ func Test_Sign(t *testing.T) {
 		t.Error(err)
 	}
 	sign := request.Header.Get(SysHeaderCaSign)
-	expectSign := "1G918IReC+OIYs3I8TPAt4yTSH6RkMas7fQnb51zuOY="
+	expectSign := "jnlO79lw7RMAhMuuqONzEGUwHIcsHu3dmai/ML3Odpk="
 	assert.Equal(t, sign, expectSign)
 }
