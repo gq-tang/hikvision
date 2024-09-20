@@ -3,9 +3,7 @@ package hikvision
 import (
 	"bytes"
 	"context"
-	"crypto/md5"
 	"crypto/tls"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"github.com/google/uuid"
@@ -173,13 +171,13 @@ func (c *Client) newRequest(ctx context.Context, method string, path string, hea
 	}
 
 	req = req.WithContext(ctx)
-	if len(data) > 0 {
-		md := md5.New()
-		md.Write(data)
-		sum := md.Sum(nil)
-		contentMd5 := base64.StdEncoding.EncodeToString(sum)
-		req.Header.Set(SysHeaderContentMD5, contentMd5)
-	}
+	//if len(data) > 0 {
+	//	md := md5.New()
+	//	md.Write(data)
+	//	sum := md.Sum(nil)
+	//	contentMd5 := base64.StdEncoding.EncodeToString(sum)
+	//	req.Header.Set(SysHeaderContentMD5, contentMd5)
+	//}
 	for k, v := range header {
 		req.Header.Set(k, v)
 	}
