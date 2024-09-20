@@ -34,11 +34,11 @@ const (
 )
 
 const (
-	PathEventSubscriptionByEventTypes = "/api/eventService/v1/eventSubscriptionByEventTypes"
-	PathResourcesByParams             = "/api/irds/v2/resource/resourcesByParams"
-	PathDeviceResource                = "/api/irds/v2/deviceResource/resources"
-	PathHistoryStatus                 = "/api/nms/v1/online/history_status"
-	PathCameraStatus                  = "/api/nms/v1/online/camera/get"
+	PathEventSubscriptionByEventTypes = "/artemis/api/eventService/v1/eventSubscriptionByEventTypes"
+	PathResourcesByParams             = "/artemis/api/irds/v2/resource/resourcesByParams"
+	PathDeviceResource                = "/artemis/api/irds/v2/deviceResource/resources"
+	PathHistoryStatus                 = "/artemis/api/nms/v1/online/history_status"
+	PathCameraStatus                  = "/artemis/api/nms/v1/online/camera/get"
 )
 
 const (
