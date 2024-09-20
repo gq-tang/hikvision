@@ -178,7 +178,7 @@ func (c *Client) newRequest(ctx context.Context, method string, path string, hea
 		md.Write(data)
 		sum := md.Sum(nil)
 		contentMd5 := base64.StdEncoding.EncodeToString(sum)
-		req.Header.Set(HeaderContentMD5, contentMd5)
+		req.Header.Set(SysHeaderContentMD5, contentMd5)
 	}
 	for k, v := range header {
 		req.Header.Set(k, v)
@@ -203,7 +203,7 @@ func (c *Client) doRequest(ctx context.Context, method string, path string, head
 		}
 	}
 	defaultHeader := map[string]string{
-		HeaderContentType: "application/json;charset=UTF-8",
+		HeaderContentType: "application/json",
 		HeaderAccept:      "*/*",
 	}
 	for k, v := range header {
@@ -213,7 +213,7 @@ func (c *Client) doRequest(ctx context.Context, method string, path string, head
 	defaultSignHeader := map[string]string{
 		SysHeaderCaKey:       c.appKey,
 		SysHeaderCaNonce:     uuid.New().String(),
-		SysHeaderCaTimestamp: fmt.Sprintf("%d", time.Now().UnixMicro()),
+		SysHeaderCaTimestamp: fmt.Sprintf("%d", time.Now().UnixMilli()),
 	}
 	for k, v := range signHeader {
 		defaultSignHeader[k] = v
@@ -223,7 +223,13 @@ func (c *Client) doRequest(ctx context.Context, method string, path string, head
 	if err != nil {
 		return nil, err
 	}
-
+	if c.isDebug {
+		c.log.Debugf("Header:\n")
+		for k, v := range request.Header {
+			fmt.Printf("%s: %s\n", k, strings.Join(v, ","))
+		}
+		c.log.Debugf("Body:\n%s", string(data))
+	}
 	return c.cli.Do(request)
 }
 

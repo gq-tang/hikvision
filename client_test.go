@@ -40,20 +40,27 @@ func Test_Sign(t *testing.T) {
 	}
 	signHeader := map[string]string{
 		SysHeaderCaKey:       cli.appKey,
-		SysHeaderCaTimestamp: "1726821293519",
-		"x-ca-nonce":         "73f44cd3-a584-7f11-1f43-a0d7c2d2317c",
+		SysHeaderCaTimestamp: "1726822771272",
+		"x-ca-nonce":         "298f056a-cc32-c199-70b0-defe68f7c893",
 		//"header-A":           "A",
 		//"header-B":           "b",
 	}
-	request, err := cli.newRequest(context.Background(), "", "/artemis/api/irds/v2/region/nodesByParams", header, signHeader, []byte(`{
-    "resourceType": "region",
-    "pageNo": 1,
-    "pageSize": 10
+	request, err := cli.newRequest(context.Background(), "", "/artemis/api/eventService/v1/eventSubscriptionByEventTypes", header, signHeader,
+		[]byte(`{
+    "eventTypes": [
+        131586,
+        131587
+    ],
+    "eventDest": "http://192.168.7.244/eventCb",
+    "subType": 1,
+    "eventLvl": [
+        2
+    ]
 }`))
 	if err != nil {
 		t.Error(err)
 	}
 	sign := request.Header.Get(SysHeaderCaSign)
-	expectSign := "jnlO79lw7RMAhMuuqONzEGUwHIcsHu3dmai/ML3Odpk="
+	expectSign := "PR/zLKYh0dS6VjajFpSwsQS2lnnWMFtDENIH3z8efJc="
 	assert.Equal(t, sign, expectSign)
 }
