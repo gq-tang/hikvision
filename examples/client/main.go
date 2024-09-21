@@ -19,7 +19,7 @@ import (
 
 func main() {
 	var host string
-	flag.StringVar(&host, "host", "https://192.168.7.251:443", "host url,example(http://127.0.0.1:8080)")
+	flag.StringVar(&host, "host", "http://127.0.0.1:8080", "host url,example(http://127.0.0.1:8080)")
 	flag.Parse()
 
 	cli, err := hikvision.NewClient(&hikvision.ClientOption{
@@ -32,8 +32,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	eventSubscript(cli)
-	//deviceResource(cli)
+	//eventSubscript(cli)
+	deviceResource(cli)
 	//historyStatus(cli)
 	//cameraStatus(cli)
 }
@@ -49,7 +49,7 @@ func eventSubscript(cli *hikvision.Client) {
 	defer separate("eventSubscript")()
 	resp, err := cli.EventSubscriptionByEventTypes(context.Background(), &hikvision.EventSubscriptionReq{
 		EventTypes: []int{hikvision.EventRegionEntrance, hikvision.EventRegionExiting},
-		EventDest:  "http://192.168.7.244/eventCb",
+		EventDest:  "http://192.168.7.244:30000/eventCb",
 		SubType:    1,
 		EventLvl:   []int{2},
 	})
